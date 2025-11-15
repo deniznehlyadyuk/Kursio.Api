@@ -1,0 +1,68 @@
+﻿using Kursio.Api.Contracts.Students;
+using Kursio.Api.Domain;
+using Kursio.Api.Extensions;
+using Kursio.Api.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Wolverine.Http;
+
+namespace Kursio.Api.Endpoints.Students;
+
+public static class UpdateStudentEndpoint
+{
+    public static async Task<(Student?, ProblemDetails)> LoadAsync(UpdateStudentRequest request,
+        HttpRequest httpRequest,
+        KursioDbContext dbContext)
+    {
+        var studentId = httpRequest.GetGuid("studentId");
+        
+        var student = await dbContext.Students.FindAsync(studentId);
+
+        if (student is null)
+        {
+            return (null, new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Detail = "Student not found"
+            });
+        }
+        
+        return (student, WolverineContinue.NoProblems);
+    }
+    
+    public static ProblemDetails Validate(UpdateStudentRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.FullName))
+        {
+            return new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+            }.AddError("fullName", "REQUIRED");
+        }
+        
+        if (request.FullName.Length > 128)
+        {
+            return new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+            }.AddError("fullName", "MAXLENGTH,128");
+        }
+
+        return WolverineContinue.NoProblems;
+    }
+    
+    [Tags("Students")]
+    [EndpointSummary("Update Student")]
+    [EndpointDescription("Update student")]
+    [WolverinePut("/students/{studentId:guid}")]
+    public static async Task<StudentResponse> UpdateStudent(UpdateStudentRequest request, Student student,
+        KursioDbContext dbContext)
+    {
+        student.Update(request.FullName);
+        
+        dbContext.Students.Update(student);
+
+        await dbContext.SaveChangesAsync();
+        
+        return new StudentResponse(student.Id, student.FullName);
+    }
+}
