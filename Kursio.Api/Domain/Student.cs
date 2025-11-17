@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Kursio.Api.Domain.Common;
 
 namespace Kursio.Api.Domain;
 
-public class Student
+public class Student : SoftDeleteEntity
 {
     public Guid Id { get; private set; }
     

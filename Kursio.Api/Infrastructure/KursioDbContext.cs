@@ -6,4 +6,10 @@ namespace Kursio.Api.Infrastructure;
 public class KursioDbContext(DbContextOptions<KursioDbContext> options) : DbContext(options)
 {
     public DbSet<Student> Students { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Student>().HasQueryFilter("SoftDelete", student => !student.IsDeleted);
+        base.OnModelCreating(modelBuilder);
+    }
 }
