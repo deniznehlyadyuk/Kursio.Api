@@ -31,20 +31,24 @@ public static class UpdateStudentEndpoint
     
     public static ProblemDetails Validate(UpdateStudentRequest request)
     {
+        var problemDetails = new ProblemDetails
+        {
+            Status = StatusCodes.Status400BadRequest,
+        };
+        
         if (string.IsNullOrWhiteSpace(request.FullName))
         {
-            return new ProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-            }.AddError("fullName", "REQUIRED");
+            problemDetails.AddError("fullName", "REQUIRED");
         }
         
         if (request.FullName.Length > 128)
         {
-            return new ProblemDetails
-            {
-                Status = StatusCodes.Status400BadRequest,
-            }.AddError("fullName", "MAXLENGTH,128");
+            problemDetails.AddError("fullName", "MAX_LENGTH", new Dictionary<string, object> {{"max", 128}});
+        }
+
+        if (problemDetails.HasErrors())
+        {
+            return problemDetails;
         }
 
         return WolverineContinue.NoProblems;

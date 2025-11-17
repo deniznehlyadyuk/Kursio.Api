@@ -42,7 +42,10 @@ public class StudentUpdateTests(Fixture fixture) : IClassFixture<Fixture>
         
         var problemDetails = await updateResult.ReadAsJsonAsync<ProblemDetails>();
         
-        problemDetails.GetError("fullName").ShouldBe("REQUIRED");
+        var (errorCode, parameters) = problemDetails.GetError("fullName");
+        
+        errorCode.ShouldBe("REQUIRED");
+        parameters.ShouldBeNull();
     }
     
     [Fact]
@@ -65,7 +68,10 @@ public class StudentUpdateTests(Fixture fixture) : IClassFixture<Fixture>
         
         var problemDetails = await updateResult.ReadAsJsonAsync<ProblemDetails>();
         
-        problemDetails.GetError("fullName").ShouldBe("MAXLENGTH,128");
+        var (errorCode, parameters) = problemDetails.GetError("fullName");
+        
+        errorCode.ShouldBe("MAX_LENGTH");
+        parameters.ShouldNotBeNull().ShouldContainKeyAndValue("max", 128L);
     }
     
     [Fact]
