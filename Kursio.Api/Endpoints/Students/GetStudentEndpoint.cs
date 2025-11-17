@@ -33,6 +33,6 @@ public static class GetStudentEndpoint
     [WolverineGet("/students/{studentId}")]
     public static StudentResponse GetStudent(Student student)
     {
-        return new StudentResponse(student.Id, student.FullName);
+        return new StudentResponse(student.Id, student.FullName, student.PaymentAmount);
     }
 }

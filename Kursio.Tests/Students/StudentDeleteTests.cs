@@ -30,7 +30,7 @@ public class StudentDeleteTests(Fixture fixture) : IClassFixture<Fixture>
         var createResult = await _host.Scenario(x =>
         {
             x.Post.Url("/students");
-            x.WriteJson(new CreateStudentRequest("Deniz Satır1"), null);
+            x.WriteJson(new CreateStudentRequest("Deniz Satır1", 500), null);
         });
         
         var student = await createResult.ReadAsJsonAsync<StudentResponse>();
@@ -53,13 +53,13 @@ public class StudentDeleteTests(Fixture fixture) : IClassFixture<Fixture>
         var createResult1 = await _host.Scenario(x =>
         {
             x.Post.Url("/students");
-            x.WriteJson(new CreateStudentRequest("Deniz Satır1"), null);
+            x.WriteJson(new CreateStudentRequest("Deniz Satır1", 500), null);
         });
         
         var createResult2 = await _host.Scenario(x =>
         {
             x.Post.Url("/students");
-            x.WriteJson(new CreateStudentRequest("Deniz Satır2"), null);
+            x.WriteJson(new CreateStudentRequest("Deniz Satır2", 500), null);
         });
         
         var student1 = await createResult1.ReadAsJsonAsync<StudentResponse>();

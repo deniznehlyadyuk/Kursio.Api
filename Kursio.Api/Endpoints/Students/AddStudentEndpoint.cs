@@ -26,6 +26,11 @@ public static class AddStudentEndpoint
             problemDetails.AddError("fullName", "MAX_LENGTH", new Dictionary<string, object> { { "max", 128 } });
         }
 
+        if (request.PaymentAmount < 0)
+        {
+            problemDetails.AddError("paymentAmount", "MIN_VALUE", new Dictionary<string, object> { { "min", 0 } });
+        }
+
         if (problemDetails.HasErrors())
         {
             return problemDetails;
@@ -40,11 +45,11 @@ public static class AddStudentEndpoint
     [WolverinePost("/students")]
     public static async Task<StudentResponse> AddStudent(CreateStudentRequest request, KursioDbContext dbContext)
     {
-        var student = Student.Create(request.FullName);
+        var student = Student.Create(request.FullName, request.PaymentAmount);
         
         await dbContext.Students.AddAsync(student);
         await dbContext.SaveChangesAsync();
         
-        return new StudentResponse(student.Id, student.FullName);
+        return new StudentResponse(student.Id, student.FullName, student.PaymentAmount);
     }
 }

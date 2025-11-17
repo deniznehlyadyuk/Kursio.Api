@@ -1,8 +1,5 @@
-﻿using System.Text.Json;
-using Kursio.Api.Contracts.Common;
+﻿using Kursio.Api.Contracts.Common;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Kursio.Api.Extensions;
 
@@ -37,28 +34,5 @@ public static class ProblemDetailsExtensions
         }
 
         return details;
-    }
-
-    public static (string errorCode, Dictionary<string, object>? parameters)
-        GetError(this ProblemDetails details, string field)
-    {
-        if (!details.Extensions.TryGetValue("errors", out var existing))
-            return (string.Empty, null);
-
-        List<ValidationError>? errors = null;
-
-        if (existing is JsonElement element)
-        {
-            errors = JsonConvert.DeserializeObject<List<ValidationError>>(element.GetRawText());
-        }
-
-        if (errors == null || errors.Count == 0)
-            return (string.Empty, null);
-
-        var err = errors.FirstOrDefault(e => e.Field == field);
-
-        return err == null 
-            ? (string.Empty, null) 
-            : (err.ErrorCode, err.Params);
     }
 }

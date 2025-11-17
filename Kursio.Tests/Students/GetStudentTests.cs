@@ -25,7 +25,7 @@ public class GetStudentTests(Fixture fixture) : IClassFixture<Fixture>
         var createResult = await _host.Scenario(x =>
         {
             x.Post.Url("/students");
-            x.WriteJson(new CreateStudentRequest("Deniz Satır"), null);
+            x.WriteJson(new CreateStudentRequest("Deniz Satır", 500), null);
         });
         
         var student = await createResult.ReadAsJsonAsync<StudentResponse>();
@@ -39,5 +39,6 @@ public class GetStudentTests(Fixture fixture) : IClassFixture<Fixture>
         
         returnedStudent.FullName.ShouldBe(student.FullName);
         returnedStudent.Id.ShouldBe(student.Id);
+        returnedStudent.PaymentAmount.ShouldBe(student.PaymentAmount);
     }
 }

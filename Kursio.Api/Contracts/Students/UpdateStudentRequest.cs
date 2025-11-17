@@ -1,3 +1,3 @@
 ﻿namespace Kursio.Api.Contracts.Students;
 
-public record UpdateStudentRequest(string FullName);
+public record UpdateStudentRequest(string FullName, int PaymentAmount);

@@ -9,21 +9,26 @@ public class Student
     [MaxLength(128)]
     public string FullName { get; private set; } = null!;
 
+    [Range(0, int.MaxValue)]
+    public int PaymentAmount { get; private set; }
+
     protected Student()
     {
     }
 
-    public static Student Create(string fullName)
+    public static Student Create(string fullName, int paymentAmount)
     {
         return new Student
         {
             Id = Guid.NewGuid(),
-            FullName = fullName
+            FullName = fullName,
+            PaymentAmount =  paymentAmount
         };
     }
 
-    public void Update(string fullName)
+    public void Update(string fullName, int paymentAmount)
     {
         FullName = fullName;
+        PaymentAmount = paymentAmount;
     }
 }

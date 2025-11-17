@@ -46,6 +46,11 @@ public static class UpdateStudentEndpoint
             problemDetails.AddError("fullName", "MAX_LENGTH", new Dictionary<string, object> {{"max", 128}});
         }
 
+        if (request.PaymentAmount < 0)
+        {
+            problemDetails.AddError("paymentAmount", "MIN_VALUE", new Dictionary<string, object> { { "min", 0 } });
+        }
+
         if (problemDetails.HasErrors())
         {
             return problemDetails;
@@ -61,12 +66,12 @@ public static class UpdateStudentEndpoint
     public static async Task<StudentResponse> UpdateStudent(UpdateStudentRequest request, Student student,
         KursioDbContext dbContext)
     {
-        student.Update(request.FullName);
+        student.Update(request.FullName, request.PaymentAmount);
         
         dbContext.Students.Update(student);
 
         await dbContext.SaveChangesAsync();
         
-        return new StudentResponse(student.Id, student.FullName);
+        return new StudentResponse(student.Id, student.FullName, student.PaymentAmount);
     }
 }

@@ -1,1 +1,1 @@
-dotnet ef database update --project .\Kursio.Api
+dotnet ef database update
