@@ -19,4 +19,10 @@ public class Course : SoftDeleteEntity
             EndTime = startTime.AddHours(1)
         };
     }
+
+    public void Update(TimeOnly startTime)
+    {
+        StartTime = startTime;
+        EndTime = startTime.AddHours(1);
+    }
 }

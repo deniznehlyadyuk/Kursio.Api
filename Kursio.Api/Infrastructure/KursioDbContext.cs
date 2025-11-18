@@ -12,6 +12,7 @@ public class KursioDbContext(DbContextOptions<KursioDbContext> options) : DbCont
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Student>().HasQueryFilter("SoftDelete", student => !student.IsDeleted);
+        modelBuilder.Entity<Course>().HasQueryFilter("SoftDelete", course => !course.IsDeleted);
 
         var timeOnlyConverter = new ValueConverter<TimeOnly, TimeSpan>(
             toDb => toDb.ToTimeSpan(),
