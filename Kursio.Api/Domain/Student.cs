@@ -5,8 +5,6 @@ namespace Kursio.Api.Domain;
 
 public class Student : SoftDeleteEntity
 {
-    public Guid Id { get; private set; }
-    
     [MaxLength(128)]
     public string FullName { get; private set; } = null!;
 
